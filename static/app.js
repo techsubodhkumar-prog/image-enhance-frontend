@@ -1,10 +1,24 @@
 /* =========================================================
+   CONFIGURATION
+========================================================= */
+
+// Render backend URL
+const BACKEND_URL =
+    "https://image-enhance-backend.onrender.com";
+
+
+/* =========================================================
    INTRO PAGE
 ========================================================= */
 
-const introPage = document.getElementById("introPage");
-const appPage = document.getElementById("appPage");
-const nextBtn = document.getElementById("nextBtn");
+const introPage =
+    document.getElementById("introPage");
+
+const appPage =
+    document.getElementById("appPage");
+
+const nextBtn =
+    document.getElementById("nextBtn");
 
 
 /*
@@ -35,11 +49,14 @@ if (nextBtn) {
    IMAGE ENHANCEMENT APPLICATION
 ========================================================= */
 
-const form = document.getElementById("uploadForm");
+const form =
+    document.getElementById("uploadForm");
 
-const input = document.getElementById("imageInput");
+const input =
+    document.getElementById("imageInput");
 
-const dropzone = document.getElementById("dropzone");
+const dropzone =
+    document.getElementById("dropzone");
 
 const selectedFile =
     document.getElementById("selectedFile");
@@ -126,7 +143,8 @@ function chooseFile(file) {
         Preview original image
     */
 
-    const reader = new FileReader();
+    const reader =
+        new FileReader();
 
     reader.onload = e => {
 
@@ -144,270 +162,360 @@ function chooseFile(file) {
    NORMAL FILE INPUT
 ========================================================= */
 
-input.addEventListener("change", () => {
+if (input) {
 
-    chooseFile(input.files[0]);
+    input.addEventListener("change", () => {
 
-});
+        chooseFile(
+            input.files[0]
+        );
+
+    });
+
+}
 
 
 /* =========================================================
    DRAG ENTER / DRAG OVER
 ========================================================= */
 
-["dragenter", "dragover"].forEach(eventName => {
+if (dropzone) {
+
+    ["dragenter", "dragover"].forEach(eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            e => {
+
+                e.preventDefault();
+
+                e.stopPropagation();
+
+                dropzone.classList.add(
+                    "dragging"
+                );
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       DRAG LEAVE / DROP
+    ===================================================== */
+
+    ["dragleave", "drop"].forEach(eventName => {
+
+        dropzone.addEventListener(
+            eventName,
+            e => {
+
+                e.preventDefault();
+
+                e.stopPropagation();
+
+                dropzone.classList.remove(
+                    "dragging"
+                );
+
+            }
+        );
+
+    });
+
+
+    /* =====================================================
+       DROP IMAGE
+    ===================================================== */
 
     dropzone.addEventListener(
-        eventName,
+        "drop",
         e => {
 
-            e.preventDefault();
+            const files =
+                e.dataTransfer.files;
 
-            dropzone.classList.add("dragging");
+            if (files && files.length > 0) {
+
+                chooseFile(files[0]);
+
+            }
 
         }
     );
 
-});
-
-
-/* =========================================================
-   DRAG LEAVE / DROP
-========================================================= */
-
-["dragleave", "drop"].forEach(eventName => {
-
-    dropzone.addEventListener(
-        eventName,
-        e => {
-
-            e.preventDefault();
-
-            dropzone.classList.remove("dragging");
-
-        }
-    );
-
-});
-
-
-/* =========================================================
-   DROP IMAGE
-========================================================= */
-
-dropzone.addEventListener("drop", e => {
-
-    chooseFile(
-        e.dataTransfer.files[0]
-    );
-
-});
+}
 
 
 /* =========================================================
    ENHANCE IMAGE
 ========================================================= */
 
-form.addEventListener(
-    "submit",
-    async e => {
+if (form) {
 
-        e.preventDefault();
+    form.addEventListener(
+        "submit",
+        async e => {
 
-        if (!selected) return;
+            e.preventDefault();
 
+            if (!selected) {
 
-        /*
-            Disable button while processing
-        */
-
-        enhanceBtn.disabled = true;
-
-        enhanceBtn.textContent =
-            "Enhancing…";
-
-
-        /*
-            Hide previous result
-        */
-
-        resultSection.classList.add(
-            "hidden"
-        );
-
-
-        /*
-            Show processing status
-        */
-
-        showStatus(
-            "Running Real-ESRGAN ×4. This may take a few seconds…"
-        );
-
-
-        /*
-            Create form data
-        */
-
-        const data =
-            new FormData();
-
-        data.append(
-            "image",
-            selected
-        );
-
-
-        try {
-
-            /*
-                Send image to Flask backend
-            */
-
-            const response =
-                await fetch(
-                    "/enhance",
-                    {
-                        method: "POST",
-                        body: data
-                    }
+                showStatus(
+                    "Please choose an image first.",
+                    "error"
                 );
 
-
-            /*
-                Read JSON response
-            */
-
-            const result =
-                await response.json();
-
-
-            /*
-                Handle backend errors
-            */
-
-            if (!response.ok) {
-
-                throw new Error(
-                    result.error ||
-                    "Enhancement failed."
-                );
+                return;
 
             }
 
 
             /*
-                Prevent browser caching
+                Disable button while processing
             */
 
-            const cacheBust =
-                `?t=${Date.now()}`;
+            enhanceBtn.disabled = true;
+
+            enhanceBtn.textContent =
+                "Enhancing…";
 
 
             /*
-                Enhanced image
+                Hide previous result
             */
 
-            enhancedPreview.src =
-                result.download_url +
-                cacheBust;
-
-
-            /*
-                Download button
-            */
-
-            downloadBtn.href =
-                result.download_url;
-
-
-            /*
-                Original dimensions
-            */
-
-            originalMeta.textContent =
-                `${result.input_width} × ${result.input_height}px`;
-
-
-            /*
-                Enhanced dimensions
-            */
-
-            enhancedMeta.textContent =
-                `${result.output_width} × ${result.output_height}px`;
-
-
-            /*
-                Inference time
-            */
-
-            timeStat.textContent =
-                `${result.time_seconds}s`;
-
-
-            /*
-                Output dimensions
-            */
-
-            sizeStat.textContent =
-                `${result.output_width} × ${result.output_height}`;
-
-
-            /*
-                Show results
-            */
-
-            resultSection.classList.remove(
+            resultSection.classList.add(
                 "hidden"
             );
 
 
             /*
-                Success message
+                Show processing status
             */
 
             showStatus(
-                "Image enhanced successfully.",
-                "success"
+                "Connecting to Real-ESRGAN server…"
             );
 
 
             /*
-                Scroll to result
+                Create form data
             */
 
-            resultSection.scrollIntoView({
-                behavior: "smooth"
-            });
+            const data =
+                new FormData();
 
-
-        }
-
-        catch (error) {
-
-            /*
-                Display error
-            */
-
-            showStatus(
-                error.message,
-                "error"
+            data.append(
+                "image",
+                selected
             );
 
+
+            try {
+
+                /*
+                    Send image to Render backend
+
+                    IMPORTANT:
+                    The frontend is hosted on Vercel,
+                    so we cannot use "/enhance".
+                */
+
+                showStatus(
+                    "Running Real-ESRGAN ×4. Please wait…"
+                );
+
+
+                const response =
+                    await fetch(
+                        `${BACKEND_URL}/enhance`,
+                        {
+                            method: "POST",
+                            body: data
+                        }
+                    );
+
+
+                /*
+                    Try to read JSON response
+                */
+
+                let result;
+
+                try {
+
+                    result =
+                        await response.json();
+
+                } catch {
+
+                    throw new Error(
+                        "The backend returned an invalid response."
+                    );
+
+                }
+
+
+                /*
+                    Handle backend errors
+                */
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        result.error ||
+                        "Enhancement failed."
+                    );
+
+                }
+
+
+                /*
+                    Make sure enhancement succeeded
+                */
+
+                if (!result.success) {
+
+                    throw new Error(
+                        result.error ||
+                        "Enhancement failed."
+                    );
+
+                }
+
+
+                /*
+                    Prevent browser caching
+                */
+
+                const cacheBust =
+                    `?t=${Date.now()}`;
+
+
+                /*
+                    Enhanced image
+
+                    Backend returns the complete
+                    Render download URL.
+                */
+
+                enhancedPreview.src =
+                    result.download_url +
+                    cacheBust;
+
+
+                /*
+                    Download button
+                */
+
+                downloadBtn.href =
+                    result.download_url;
+
+                downloadBtn.setAttribute(
+                    "download",
+                    "enhanced_x4.png"
+                );
+
+
+                /*
+                    Original dimensions
+                */
+
+                originalMeta.textContent =
+                    `${result.input_width} × ${result.input_height}px`;
+
+
+                /*
+                    Enhanced dimensions
+                */
+
+                enhancedMeta.textContent =
+                    `${result.output_width} × ${result.output_height}px`;
+
+
+                /*
+                    Inference time
+                */
+
+                timeStat.textContent =
+                    `${result.time_seconds}s`;
+
+
+                /*
+                    Output dimensions
+                */
+
+                sizeStat.textContent =
+                    `${result.output_width} × ${result.output_height}`;
+
+
+                /*
+                    Show results
+                */
+
+                resultSection.classList.remove(
+                    "hidden"
+                );
+
+
+                /*
+                    Success message
+                */
+
+                showStatus(
+                    "Image enhanced successfully.",
+                    "success"
+                );
+
+
+                /*
+                    Scroll to result
+                */
+
+                resultSection.scrollIntoView({
+                    behavior: "smooth"
+                });
+
+            }
+
+
+            catch (error) {
+
+                console.error(
+                    "Enhancement error:",
+                    error
+                );
+
+
+                /*
+                    Display error
+                */
+
+                showStatus(
+                    error.message ||
+                    "Something went wrong while enhancing the image.",
+                    "error"
+                );
+
+            }
+
+
+            finally {
+
+                /*
+                    Restore button
+                */
+
+                enhanceBtn.disabled = false;
+
+                enhanceBtn.textContent =
+                    "Enhance Image ×4";
+
+            }
+
         }
+    );
 
-        finally {
-
-            /*
-                Restore button
-            */
-
-            enhanceBtn.disabled = false;
-
-            enhanceBtn.textContent =
-                "Enhance Image ×4";
-
-        }
-
-    }
-);
+}
