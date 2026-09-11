@@ -1,9 +1,5 @@
-/* =========================================================
-   GLOBAL VARIABLES
-========================================================= */
-
 :root {
-    --bg: #0b0d12;
+    --bg: #080a10;
     --panel: #121620;
     --panel2: #171c28;
 
@@ -61,10 +57,11 @@ body {
         sans-serif;
 }
 
-
-/* =========================================================
-   UTILITY
-========================================================= */
+button,
+input,
+a {
+    font: inherit;
+}
 
 .hidden {
     display: none !important;
@@ -86,7 +83,7 @@ body {
 
     overflow: hidden;
 
-    padding: 70px 20px;
+    padding: 60px 20px;
 
     background:
         radial-gradient(
@@ -103,7 +100,9 @@ body {
 }
 
 
-/* Background glow */
+/* =========================================================
+   BACKGROUND GLOW
+========================================================= */
 
 .intro-glow {
     position: absolute;
@@ -133,7 +132,9 @@ body {
 }
 
 
-/* Main intro container */
+/* =========================================================
+   INTRO CONTENT
+========================================================= */
 
 .intro-content {
     width: min(1250px, 100%);
@@ -146,12 +147,15 @@ body {
 }
 
 
-/* Eyebrow */
+/* =========================================================
+   INTRO EYEBROW
+========================================================= */
 
 .intro-eyebrow {
     display: inline-flex;
 
     align-items: center;
+
     gap: 9px;
 
     color: #a997ff;
@@ -172,7 +176,9 @@ body {
 }
 
 
-/* Main title */
+/* =========================================================
+   INTRO TITLE
+========================================================= */
 
 .intro-title {
     margin: 0 auto;
@@ -212,12 +218,14 @@ body {
 }
 
 
-/* Description */
+/* =========================================================
+   INTRO DESCRIPTION
+========================================================= */
 
 .intro-description {
     max-width: 720px;
 
-    margin: 25px auto 45px;
+    margin: 25px auto 42px;
 
     color: var(--muted);
 
@@ -232,7 +240,7 @@ body {
 
 
 /* =========================================================
-   IMAGE SHOWCASE
+   SHOWCASE
 ========================================================= */
 
 .showcase {
@@ -253,7 +261,9 @@ body {
 }
 
 
-/* Individual image cards */
+/* =========================================================
+   SHOWCASE CARD
+========================================================= */
 
 .showcase-card {
     position: relative;
@@ -292,9 +302,6 @@ body {
         0 30px 80px rgba(0,0,0,0.45);
 }
 
-
-/* Center card slightly bigger */
-
 .featured-card {
     transform: translateY(-15px);
 
@@ -310,7 +317,9 @@ body {
 }
 
 
-/* Image */
+/* =========================================================
+   SHOWCASE IMAGE
+========================================================= */
 
 .image-wrapper {
     width: 100%;
@@ -341,7 +350,9 @@ body {
 }
 
 
-/* Image labels */
+/* =========================================================
+   IMAGE LABEL
+========================================================= */
 
 .image-label {
     display: flex;
@@ -367,6 +378,8 @@ body {
     width: 7px;
     height: 7px;
 
+    flex-shrink: 0;
+
     border-radius: 50%;
 
     background: var(--accent);
@@ -376,7 +389,9 @@ body {
 }
 
 
-/* Featured badge */
+/* =========================================================
+   FEATURED BADGE
+========================================================= */
 
 .featured-badge {
     position: absolute;
@@ -409,7 +424,7 @@ body {
 
 
 /* =========================================================
-   INTRO FEATURES
+   FEATURES
 ========================================================= */
 
 .intro-features {
@@ -456,6 +471,8 @@ body {
 
     place-items: center;
 
+    flex-shrink: 0;
+
     border-radius: 10px;
 
     background:
@@ -484,7 +501,7 @@ body {
 
 
 /* =========================================================
-   NEXT BUTTON
+   START BUTTON
 ========================================================= */
 
 .next-btn {
@@ -556,9 +573,6 @@ body {
     font-size: 18px;
 }
 
-
-/* Intro hint */
-
 .intro-hint {
     margin-top: 18px;
 
@@ -584,9 +598,9 @@ body {
 ========================================================= */
 
 .navbar {
-    height: 76px;
+    min-height: 76px;
 
-    padding: 0 6vw;
+    padding: 14px 6vw;
 
     display: flex;
 
@@ -594,14 +608,22 @@ body {
 
     justify-content: space-between;
 
+    gap: 20px;
+
     border-bottom:
         1px solid var(--line);
 
     background:
-        rgba(11,13,18,.75);
+        rgba(11,13,18,.82);
 
     backdrop-filter:
         blur(14px);
+
+    position: sticky;
+
+    top: 0;
+
+    z-index: 20;
 }
 
 .brand {
@@ -628,9 +650,6 @@ body {
     margin-top: 2px;
 }
 
-
-/* Logo */
-
 .logo {
     width: 38px;
     height: 38px;
@@ -641,6 +660,8 @@ body {
 
     place-items: center;
 
+    flex-shrink: 0;
+
     background:
         linear-gradient(
             135deg,
@@ -650,9 +671,6 @@ body {
 
     font-weight: 800;
 }
-
-
-/* Badge */
 
 .badge {
     padding: 8px 12px;
@@ -669,7 +687,7 @@ body {
 
 
 /* =========================================================
-   MAIN CONTAINER
+   CONTAINER
 ========================================================= */
 
 .container {
@@ -747,7 +765,9 @@ body {
 }
 
 
-/* Upload card */
+/* =========================================================
+   UPLOAD CARD
+========================================================= */
 
 .upload-card {
     padding: 18px;
@@ -774,7 +794,10 @@ body {
 
     cursor: pointer;
 
-    transition: .2s;
+    transition:
+        border-color .2s ease,
+        background .2s ease,
+        transform .2s ease;
 
     text-align: center;
 }
@@ -786,10 +809,9 @@ body {
 
     background:
         rgba(124,92,255,.07);
+
+    transform: translateY(-2px);
 }
-
-
-/* Upload icon */
 
 .upload-icon {
     width: 58px;
@@ -841,6 +863,12 @@ body {
     color: var(--muted);
 
     font-size: 13px;
+
+    overflow: hidden;
+
+    text-overflow: ellipsis;
+
+    white-space: nowrap;
 }
 
 
@@ -869,8 +897,11 @@ body {
     justify-content: center;
 
     align-items: center;
-}
 
+    transition:
+        transform .2s ease,
+        opacity .2s ease;
+}
 
 .primary-btn {
     color: white;
@@ -881,6 +912,10 @@ body {
             var(--accent),
             #5a8cff
         );
+}
+
+.primary-btn:not(:disabled):hover {
+    transform: translateY(-2px);
 }
 
 .primary-btn:disabled {
@@ -900,6 +935,8 @@ body {
     padding: 16px;
 
     color: var(--muted);
+
+    line-height: 1.5;
 }
 
 .status.success {
@@ -939,9 +976,6 @@ body {
     font-size: 28px;
 }
 
-
-/* Download */
-
 .download-btn {
     width: auto;
 
@@ -951,6 +985,10 @@ body {
 
     padding:
         12px 18px;
+}
+
+.download-btn:hover {
+    transform: translateY(-2px);
 }
 
 
@@ -984,6 +1022,24 @@ body {
         2px 2px 12px;
 }
 
+.preview-container {
+    width: 100%;
+
+    min-height: 260px;
+
+    display: flex;
+
+    justify-content: center;
+
+    align-items: center;
+
+    overflow: hidden;
+
+    border-radius: 12px;
+
+    background: #080a0e;
+}
+
 .image-panel img {
     width: 100%;
 
@@ -994,8 +1050,6 @@ body {
     display: block;
 
     border-radius: 12px;
-
-    background: #080a0e;
 }
 
 .meta {
@@ -1061,13 +1115,14 @@ footer {
 
 
 /* =========================================================
-   RESPONSIVE DESIGN
+   TABLET
 ========================================================= */
 
 @media (max-width: 900px) {
 
     .showcase {
-        grid-template-columns: 1fr 1fr;
+        grid-template-columns:
+            1fr 1fr;
     }
 
     .featured-card {
@@ -1081,13 +1136,21 @@ footer {
     .card-three {
         display: none;
     }
+
+    .container {
+        width: min(94%, 760px);
+    }
 }
 
+
+/* =========================================================
+   MOBILE
+========================================================= */
 
 @media (max-width: 750px) {
 
     .navbar {
-        padding: 0 5%;
+        padding: 14px 5%;
     }
 
     .badge {
@@ -1096,6 +1159,14 @@ footer {
 
     .hero {
         padding-top: 55px;
+    }
+
+    .hero h1 {
+        font-size: clamp(36px, 11vw, 52px);
+    }
+
+    .hero h1 br {
+        display: none;
     }
 
     .comparison {
@@ -1119,7 +1190,7 @@ footer {
     }
 
 
-    /* Intro */
+    /* INTRO */
 
     .intro-page {
         padding:
@@ -1127,7 +1198,8 @@ footer {
     }
 
     .intro-title {
-        font-size: 45px;
+        font-size:
+            clamp(40px, 12vw, 55px);
     }
 
     .intro-description {
@@ -1143,10 +1215,6 @@ footer {
     }
 
     .showcase-card {
-        display: block;
-    }
-
-    .card-two {
         display: block;
     }
 
@@ -1173,10 +1241,23 @@ footer {
     .next-btn {
         width: min(330px, 100%);
     }
+
+    .dropzone {
+        min-height: 260px;
+    }
 }
 
 
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
 @media (max-width: 450px) {
+
+    .intro-page {
+        padding:
+            40px 14px;
+    }
 
     .intro-title {
         font-size: 38px;
@@ -1196,5 +1277,30 @@ footer {
 
     .image-label {
         font-size: 9px;
+    }
+
+    .brand strong {
+        font-size: 14px;
+    }
+
+    .brand span {
+        font-size: 11px;
+    }
+
+    .logo {
+        width: 36px;
+        height: 36px;
+    }
+
+    .container {
+        width: 94%;
+    }
+
+    .upload-card {
+        padding: 12px;
+    }
+
+    .dropzone {
+        min-height: 240px;
     }
 }

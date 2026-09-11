@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Real-ESRGAN Super Resolution</title>
 
-    <link rel="stylesheet"
-          href="{{ url_for('static', filename='style.css') }}">
+    <link rel="stylesheet" href="static/style.css">
 </head>
 
 <body>
@@ -18,20 +18,17 @@
 
 <section id="introPage" class="intro-page">
 
-    <!-- Background effects -->
     <div class="intro-glow glow-one"></div>
     <div class="intro-glow glow-two"></div>
 
     <div class="intro-content">
 
-        <!-- Small top label -->
         <div class="intro-eyebrow">
             <span class="spark">✦</span>
             AI IMAGE ENHANCEMENT
             <span class="spark">✦</span>
         </div>
 
-        <!-- Main heading -->
         <h1 class="intro-title">
             Bring blurry images
             <span>back to life.</span>
@@ -43,24 +40,28 @@
             <strong>Real-ESRGAN ×4</strong> super resolution.
         </p>
 
-        <!-- Image showcase -->
+
+        <!-- IMAGE SHOWCASE -->
+
         <div class="showcase">
 
-            <!-- Image 1 -->
             <div class="showcase-card card-one">
+
                 <div class="image-wrapper">
-                    <img src="{{ url_for('static', filename='images/image11.png') }}"
-                         alt="AI image enhancement example 1">
+                    <img
+                        src="static/images/image11.png"
+                        alt="AI image enhancement example 1"
+                    >
                 </div>
 
                 <div class="image-label">
                     <span class="label-dot"></span>
                     DETAIL RESTORATION
                 </div>
+
             </div>
 
 
-            <!-- Image 2 -->
             <div class="showcase-card card-two featured-card">
 
                 <div class="featured-badge">
@@ -68,73 +69,105 @@
                 </div>
 
                 <div class="image-wrapper">
-                    <img src="{{ url_for('static', filename='images/image22.png') }}"
-                         alt="AI image enhancement example 2">
+                    <img
+                        src="static/images/image22.png"
+                        alt="AI image enhancement example 2"
+                    >
                 </div>
 
                 <div class="image-label">
                     <span class="label-dot"></span>
                     SHARPER & CLEARER
                 </div>
+
             </div>
 
 
-            <!-- Image 3 -->
             <div class="showcase-card card-three">
+
                 <div class="image-wrapper">
-                    <img src="{{ url_for('static', filename='images/image33.png') }}"
-                         alt="AI image enhancement example 3">
+                    <img
+                        src="static/images/image33.png"
+                        alt="AI image enhancement example 3"
+                    >
                 </div>
 
                 <div class="image-label">
                     <span class="label-dot"></span>
                     ENHANCED QUALITY
                 </div>
+
             </div>
 
         </div>
 
 
-        <!-- Feature points -->
+        <!-- FEATURES -->
+
         <div class="intro-features">
 
             <div class="intro-feature">
-                <div class="feature-icon">✦</div>
+
+                <div class="feature-icon">
+                    ✦
+                </div>
+
                 <div>
                     <strong>AI Powered</strong>
                     <span>Deep learning enhancement</span>
                 </div>
+
             </div>
 
+
             <div class="intro-feature">
-                <div class="feature-icon">↗</div>
+
+                <div class="feature-icon">
+                    ↗
+                </div>
+
                 <div>
                     <strong>4× Upscaling</strong>
                     <span>More pixels, more detail</span>
                 </div>
+
             </div>
 
+
             <div class="intro-feature">
-                <div class="feature-icon">◈</div>
+
+                <div class="feature-icon">
+                    ◈
+                </div>
+
                 <div>
                     <strong>High Quality</strong>
                     <span>Sharper image output</span>
                 </div>
+
             </div>
 
         </div>
 
 
-        <!-- Next button -->
-        <button id="nextBtn" class="next-btn">
+        <!-- START BUTTON -->
 
-            <span>Start Enhancing</span>
+        <button
+            id="nextBtn"
+            class="next-btn"
+            type="button"
+        >
+
+            <span>
+                Start Enhancing
+            </span>
 
             <span class="next-arrow">
                 →
             </span>
 
         </button>
+
 
         <div class="intro-hint">
             Powered by Real-ESRGAN • PyTorch • OpenCV
@@ -152,234 +185,294 @@
 
 <section id="appPage" class="app-page hidden">
 
-<header class="navbar">
 
-    <div class="brand">
+    <!-- NAVBAR -->
 
-        <div class="logo">
-            SR
-        </div>
+    <header class="navbar">
 
-        <div>
-            <strong>Super Resolution</strong>
-            <span>Real-ESRGAN ×4</span>
-        </div>
+        <div class="brand">
 
-    </div>
-
-    <div class="badge">
-        {{ device }} • {{ scale }}
-    </div>
-
-</header>
-
-
-<main class="container">
-
-    <!-- HERO -->
-
-    <section class="hero">
-
-        <div class="eyebrow">
-            AI IMAGE ENHANCEMENT
-        </div>
-
-        <h1>
-            Turn low-resolution images
-            <br>
-            <span>into sharper ×4 images.</span>
-        </h1>
-
-        <p>
-            Upload an image and Real-ESRGAN will generate a
-            4× super-resolved result using GPU-accelerated
-            inference when available.
-        </p>
-
-    </section>
-
-
-    <!-- UPLOAD CARD -->
-
-    <section class="card upload-card">
-
-        <form id="uploadForm">
-
-            <label class="dropzone"
-                   id="dropzone"
-                   for="imageInput">
-
-                <input
-                    id="imageInput"
-                    name="image"
-                    type="file"
-                    accept=".png,.jpg,.jpeg,.webp,.bmp"
-                    hidden
-                >
-
-                <div class="upload-icon">
-                    ↑
-                </div>
-
-                <h2>
-                    Drop your image here
-                </h2>
-
-                <p>
-                    or click to browse
-                </p>
-
-                <small>
-                    PNG, JPG, JPEG, WEBP, BMP • Max 20 MB
-                </small>
-
-            </label>
-
-
-            <div id="selectedFile"
-                 class="selected-file hidden">
+            <div class="logo">
+                SR
             </div>
 
+            <div class="brand-text">
+                <strong>
+                    Super Resolution
+                </strong>
 
-            <button
-                id="enhanceBtn"
-                class="primary-btn"
-                type="submit"
-                disabled>
-
-                Enhance Image ×4
-
-            </button>
-
-        </form>
-
-    </section>
-
-
-    <!-- STATUS -->
-
-    <section id="status"
-             class="status hidden">
-    </section>
-
-
-    <!-- RESULTS -->
-
-    <section id="resultSection"
-             class="results hidden">
-
-        <div class="result-header">
-
-            <div>
-
-                <div class="eyebrow">
-                    RESULT
-                </div>
-
-                <h2>
-                    Your enhanced image
-                </h2>
-
-            </div>
-
-
-            <a
-                id="downloadBtn"
-                class="download-btn"
-                href="#"
-                download>
-
-                Download PNG
-
-            </a>
-
-        </div>
-
-
-        <div class="comparison">
-
-            <!-- ORIGINAL -->
-
-            <div class="image-panel">
-
-                <div class="panel-title">
-                    Original
-                </div>
-
-                <img
-                    id="originalPreview"
-                    alt="Original preview"
-                >
-
-                <div
-                    id="originalMeta"
-                    class="meta">
-                </div>
-
-            </div>
-
-
-            <!-- ENHANCED -->
-
-            <div class="image-panel">
-
-                <div class="panel-title">
+                <span>
                     Real-ESRGAN ×4
-                </div>
+                </span>
+            </div>
 
-                <img
-                    id="enhancedPreview"
-                    alt="Enhanced preview"
+        </div>
+
+
+        <div class="badge">
+            4× AI Enhancement
+        </div>
+
+    </header>
+
+
+
+    <!-- MAIN -->
+
+    <main class="container">
+
+
+        <!-- HERO -->
+
+        <section class="hero">
+
+            <div class="eyebrow">
+                AI IMAGE ENHANCEMENT
+            </div>
+
+            <h1>
+                Turn low-resolution images
+                <br>
+                <span>into sharper ×4 images.</span>
+            </h1>
+
+            <p>
+                Upload an image and Real-ESRGAN will generate a
+                4× super-resolved result using AI-powered
+                image enhancement.
+            </p>
+
+        </section>
+
+
+
+        <!-- UPLOAD CARD -->
+
+        <section class="card upload-card">
+
+            <form id="uploadForm">
+
+                <label
+                    class="dropzone"
+                    id="dropzone"
+                    for="imageInput"
                 >
 
+                    <input
+                        id="imageInput"
+                        name="image"
+                        type="file"
+                        accept=".png,.jpg,.jpeg,.webp,.bmp"
+                        hidden
+                    >
+
+
+                    <div class="upload-icon">
+                        ↑
+                    </div>
+
+
+                    <h2>
+                        Drop your image here
+                    </h2>
+
+
+                    <p>
+                        or click to browse
+                    </p>
+
+
+                    <small>
+                        PNG, JPG, JPEG, WEBP, BMP • Max 20 MB
+                    </small>
+
+                </label>
+
+
                 <div
-                    id="enhancedMeta"
-                    class="meta">
+                    id="selectedFile"
+                    class="selected-file hidden"
+                ></div>
+
+
+                <button
+                    id="enhanceBtn"
+                    class="primary-btn"
+                    type="submit"
+                    disabled
+                >
+                    Enhance Image ×4
+                </button>
+
+            </form>
+
+        </section>
+
+
+
+        <!-- STATUS -->
+
+        <section
+            id="status"
+            class="status hidden"
+        ></section>
+
+
+
+        <!-- RESULTS -->
+
+        <section
+            id="resultSection"
+            class="results hidden"
+        >
+
+
+            <!-- RESULT HEADER -->
+
+            <div class="result-header">
+
+                <div>
+
+                    <div class="eyebrow">
+                        RESULT
+                    </div>
+
+                    <h2>
+                        Your enhanced image
+                    </h2>
+
+                </div>
+
+
+                <a
+                    id="downloadBtn"
+                    class="download-btn"
+                    href="#"
+                    download="enhanced_x4.png"
+                >
+                    Download PNG
+                </a>
+
+            </div>
+
+
+
+            <!-- IMAGE COMPARISON -->
+
+            <div class="comparison">
+
+
+                <!-- ORIGINAL -->
+
+                <div class="image-panel">
+
+                    <div class="panel-title">
+                        Original
+                    </div>
+
+                    <div class="preview-container">
+
+                        <img
+                            id="originalPreview"
+                            alt="Original preview"
+                        >
+
+                    </div>
+
+                    <div
+                        id="originalMeta"
+                        class="meta"
+                    ></div>
+
+                </div>
+
+
+
+                <!-- ENHANCED -->
+
+                <div class="image-panel">
+
+                    <div class="panel-title">
+                        Real-ESRGAN ×4
+                    </div>
+
+                    <div class="preview-container">
+
+                        <img
+                            id="enhancedPreview"
+                            alt="Enhanced preview"
+                        >
+
+                    </div>
+
+                    <div
+                        id="enhancedMeta"
+                        class="meta"
+                    ></div>
+
                 </div>
 
             </div>
 
-        </div>
 
 
-        <!-- STATS -->
+            <!-- STATISTICS -->
 
-        <div class="stats">
+            <div class="stats">
 
-            <div>
-                <span>Scale</span>
-                <strong>4×</strong>
+                <div>
+                    <span>
+                        Scale
+                    </span>
+
+                    <strong>
+                        4×
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>
+                        Inference time
+                    </span>
+
+                    <strong id="timeStat">
+                        —
+                    </strong>
+                </div>
+
+
+                <div>
+                    <span>
+                        Output
+                    </span>
+
+                    <strong id="sizeStat">
+                        —
+                    </strong>
+                </div>
+
             </div>
 
-            <div>
-                <span>Inference time</span>
-                <strong id="timeStat">
-                    —
-                </strong>
-            </div>
+        </section>
 
-            <div>
-                <span>Output</span>
-                <strong id="sizeStat">
-                    —
-                </strong>
-            </div>
-
-        </div>
-
-    </section>
-
-</main>
+    </main>
 
 
-<footer>
-    Real-ESRGAN • PyTorch • OpenCV • Flask
-</footer>
+
+    <!-- FOOTER -->
+
+    <footer>
+        Real-ESRGAN • PyTorch • OpenCV • Flask
+    </footer>
 
 </section>
 
 
-<script src="{{ url_for('static', filename='app.js') }}"></script>
+
+<!-- JAVASCRIPT -->
+
+<script src="static/app.js"></script>
 
 </body>
 </html>

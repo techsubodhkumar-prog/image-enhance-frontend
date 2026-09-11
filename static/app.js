@@ -2,7 +2,6 @@
    CONFIGURATION
 ========================================================= */
 
-// Render backend URL
 const BACKEND_URL =
     "https://image-enhance-backend.onrender.com";
 
@@ -21,11 +20,6 @@ const nextBtn =
     document.getElementById("nextBtn");
 
 
-/*
-    When the user clicks "Start Enhancing",
-    hide the intro page and open the actual application.
-*/
-
 if (nextBtn) {
 
     nextBtn.addEventListener("click", () => {
@@ -34,7 +28,6 @@ if (nextBtn) {
 
         appPage.classList.remove("hidden");
 
-        // Start from the top of the application
         window.scrollTo({
             top: 0,
             behavior: "smooth"
@@ -46,7 +39,7 @@ if (nextBtn) {
 
 
 /* =========================================================
-   IMAGE ENHANCEMENT APPLICATION
+   ELEMENTS
 ========================================================= */
 
 const form =
@@ -96,10 +89,12 @@ let selected = null;
 
 
 /* =========================================================
-   STATUS MESSAGE
+   STATUS
 ========================================================= */
 
 function showStatus(message, type = "") {
+
+    if (!statusBox) return;
 
     statusBox.textContent = message;
 
@@ -112,19 +107,66 @@ function showStatus(message, type = "") {
 
 
 /* =========================================================
-   FILE SELECTION
+   FILE VALIDATION
+========================================================= */
+
+function isValidImage(file) {
+
+    if (!file) {
+        return false;
+    }
+
+    const allowedTypes = [
+        "image/png",
+        "image/jpeg",
+        "image/webp",
+        "image/bmp"
+    ];
+
+    return allowedTypes.includes(file.type);
+
+}
+
+
+/* =========================================================
+   CHOOSE FILE
 ========================================================= */
 
 function chooseFile(file) {
 
-    if (!file) return;
+    if (!file) {
+        return;
+    }
+
+
+    if (!isValidImage(file)) {
+
+        showStatus(
+            "Please select a PNG, JPG, JPEG, WEBP or BMP image.",
+            "error"
+        );
+
+        return;
+    }
+
+
+    const maxSize =
+        20 * 1024 * 1024;
+
+
+    if (file.size > maxSize) {
+
+        showStatus(
+            "Image is too large. Maximum size is 20 MB.",
+            "error"
+        );
+
+        return;
+    }
+
 
     selected = file;
 
-
-    /*
-        Show selected filename
-    */
 
     selectedFile.textContent =
         `Selected: ${file.name} • ${(file.size / 1024 / 1024).toFixed(2)} MB`;
@@ -132,113 +174,122 @@ function chooseFile(file) {
     selectedFile.classList.remove("hidden");
 
 
-    /*
-        Enable enhancement button
-    */
-
     enhanceBtn.disabled = false;
 
-
-    /*
-        Preview original image
-    */
 
     const reader =
         new FileReader();
 
-    reader.onload = e => {
+
+    reader.onload = event => {
 
         originalPreview.src =
-            e.target.result;
+            event.target.result;
+
+        originalPreview.style.display =
+            "block";
 
     };
 
+
     reader.readAsDataURL(file);
+
+
+    showStatus(
+        "Image ready. Click Enhance Image ×4.",
+        ""
+    );
 
 }
 
 
 /* =========================================================
-   NORMAL FILE INPUT
+   FILE INPUT
 ========================================================= */
 
 if (input) {
 
-    input.addEventListener("change", () => {
+    input.addEventListener(
+        "change",
+        () => {
 
-        chooseFile(
-            input.files[0]
-        );
+            chooseFile(
+                input.files[0]
+            );
 
-    });
+        }
+    );
 
 }
 
 
 /* =========================================================
-   DRAG ENTER / DRAG OVER
+   DRAG AND DROP
 ========================================================= */
 
 if (dropzone) {
 
-    ["dragenter", "dragover"].forEach(eventName => {
 
-        dropzone.addEventListener(
-            eventName,
-            e => {
+    ["dragenter", "dragover"].forEach(
+        eventName => {
 
-                e.preventDefault();
+            dropzone.addEventListener(
+                eventName,
+                event => {
 
-                e.stopPropagation();
+                    event.preventDefault();
 
-                dropzone.classList.add(
-                    "dragging"
-                );
+                    event.stopPropagation();
 
-            }
-        );
+                    dropzone.classList.add(
+                        "dragging"
+                    );
 
-    });
+                }
+            );
 
-
-    /* =====================================================
-       DRAG LEAVE / DROP
-    ===================================================== */
-
-    ["dragleave", "drop"].forEach(eventName => {
-
-        dropzone.addEventListener(
-            eventName,
-            e => {
-
-                e.preventDefault();
-
-                e.stopPropagation();
-
-                dropzone.classList.remove(
-                    "dragging"
-                );
-
-            }
-        );
-
-    });
+        }
+    );
 
 
-    /* =====================================================
-       DROP IMAGE
-    ===================================================== */
+    ["dragleave", "drop"].forEach(
+        eventName => {
+
+            dropzone.addEventListener(
+                eventName,
+                event => {
+
+                    event.preventDefault();
+
+                    event.stopPropagation();
+
+                    dropzone.classList.remove(
+                        "dragging"
+                    );
+
+                }
+            );
+
+        }
+    );
+
 
     dropzone.addEventListener(
         "drop",
-        e => {
+        event => {
 
             const files =
-                e.dataTransfer.files;
+                event.dataTransfer.files;
 
-            if (files && files.length > 0) {
 
-                chooseFile(files[0]);
+            if (
+                files &&
+                files.length > 0
+            ) {
+
+                chooseFile(
+                    files[0]
+                );
 
             }
 
@@ -256,9 +307,10 @@ if (form) {
 
     form.addEventListener(
         "submit",
-        async e => {
+        async event => {
 
-            e.preventDefault();
+            event.preventDefault();
+
 
             if (!selected) {
 
@@ -268,44 +320,29 @@ if (form) {
                 );
 
                 return;
-
             }
 
 
-            /*
-                Disable button while processing
-            */
-
-            enhanceBtn.disabled = true;
+            enhanceBtn.disabled =
+                true;
 
             enhanceBtn.textContent =
                 "Enhancing…";
 
-
-            /*
-                Hide previous result
-            */
 
             resultSection.classList.add(
                 "hidden"
             );
 
 
-            /*
-                Show processing status
-            */
-
             showStatus(
                 "Connecting to Real-ESRGAN server…"
             );
 
 
-            /*
-                Create form data
-            */
-
             const data =
                 new FormData();
+
 
             data.append(
                 "image",
@@ -315,13 +352,6 @@ if (form) {
 
             try {
 
-                /*
-                    Send image to Render backend
-
-                    IMPORTANT:
-                    The frontend is hosted on Vercel,
-                    so we cannot use "/enhance".
-                */
 
                 showStatus(
                     "Running Real-ESRGAN ×4. Please wait…"
@@ -338,11 +368,8 @@ if (form) {
                     );
 
 
-                /*
-                    Try to read JSON response
-                */
-
                 let result;
+
 
                 try {
 
@@ -358,10 +385,6 @@ if (form) {
                 }
 
 
-                /*
-                    Handle backend errors
-                */
-
                 if (!response.ok) {
 
                     throw new Error(
@@ -371,10 +394,6 @@ if (form) {
 
                 }
 
-
-                /*
-                    Make sure enhancement succeeded
-                */
 
                 if (!result.success) {
 
@@ -386,32 +405,26 @@ if (form) {
                 }
 
 
-                /*
-                    Prevent browser caching
-                */
+                /* =================================================
+                   RESULT URL
+                ================================================= */
+
+                const imageUrl =
+                    result.download_url;
+
 
                 const cacheBust =
                     `?t=${Date.now()}`;
 
 
-                /*
-                    Enhanced image
-
-                    Backend returns the complete
-                    Render download URL.
-                */
-
                 enhancedPreview.src =
-                    result.download_url +
+                    imageUrl +
                     cacheBust;
 
 
-                /*
-                    Download button
-                */
-
                 downloadBtn.href =
-                    result.download_url;
+                    imageUrl;
+
 
                 downloadBtn.setAttribute(
                     "download",
@@ -419,50 +432,38 @@ if (form) {
                 );
 
 
-                /*
-                    Original dimensions
-                */
+                /* =================================================
+                   DIMENSIONS
+                ================================================= */
 
                 originalMeta.textContent =
                     `${result.input_width} × ${result.input_height}px`;
 
 
-                /*
-                    Enhanced dimensions
-                */
-
                 enhancedMeta.textContent =
                     `${result.output_width} × ${result.output_height}px`;
 
 
-                /*
-                    Inference time
-                */
+                /* =================================================
+                   STATS
+                ================================================= */
 
                 timeStat.textContent =
                     `${result.time_seconds}s`;
 
 
-                /*
-                    Output dimensions
-                */
-
                 sizeStat.textContent =
                     `${result.output_width} × ${result.output_height}`;
 
 
-                /*
-                    Show results
-                */
+                /* =================================================
+                   SHOW RESULT
+                ================================================= */
 
                 resultSection.classList.remove(
                     "hidden"
                 );
 
-
-                /*
-                    Success message
-                */
 
                 showStatus(
                     "Image enhanced successfully.",
@@ -470,12 +471,9 @@ if (form) {
                 );
 
 
-                /*
-                    Scroll to result
-                */
-
                 resultSection.scrollIntoView({
-                    behavior: "smooth"
+                    behavior: "smooth",
+                    block: "start"
                 });
 
             }
@@ -489,10 +487,6 @@ if (form) {
                 );
 
 
-                /*
-                    Display error
-                */
-
                 showStatus(
                     error.message ||
                     "Something went wrong while enhancing the image.",
@@ -504,11 +498,8 @@ if (form) {
 
             finally {
 
-                /*
-                    Restore button
-                */
-
-                enhanceBtn.disabled = false;
+                enhanceBtn.disabled =
+                    false;
 
                 enhanceBtn.textContent =
                     "Enhance Image ×4";
